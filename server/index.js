@@ -1,8 +1,9 @@
 // server - index.js
 
-// Defining the consts.                 // *const: the identifier cannot be reassigned*  
-const express = require("express");		// *express: a back end web framework for Node.js *
-const axios = require("axios");		    // *axios:  is a library that for to create HTTP requests that are present externally*
+// Defining the consts.
+// *const: the identifier cannot be reassigned*
+const express = require("express"); // *express: a back end web framework for Node.js *
+const axios = require("axios"); // *axios:  is a library that for to create HTTP requests that are present externally*
 
 const PORT = process.env.PORT || 3001;
 
