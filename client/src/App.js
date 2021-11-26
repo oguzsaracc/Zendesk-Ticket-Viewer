@@ -1,23 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import axios from "axios";
+import BootstrapTable from "react-bootstrap-table-next";
+import "./App.css";
 
 function App() {
+  const [data, setData] = React.useState([]);
+  const columns = [
+    {
+      dataField: "id",
+      text: "Ticket ID",
+    },
+    {
+      dataField: "subject",
+      text: "Subject",
+    },
+    {
+      dataField: "status",
+      text: "Status",
+    },
+    {
+      dataField: "priority",
+      text: "Priority",
+    },
+  ];
+
+  React.useEffect(() => {
+    GetFindTickets();
+  }, []);
+
+  const GetFindTickets = () => {
+    const findTickets = async () => {
+      try {
+        const resp = await axios.get("/api");
+        if (resp.data) {
+          setData(resp.data);
+        } else {
+          setData([]);
+        }
+
+        console.log(resp.data);
+      } catch (err) {
+        // Handle Error Here
+        console.error(err);
+      }
+    };
+    findTickets();
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BootstrapTable keyField="id" data={data} columns={columns} />
     </div>
   );
 }
