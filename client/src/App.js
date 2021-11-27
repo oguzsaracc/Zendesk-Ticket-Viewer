@@ -3,6 +3,7 @@
 import React from "react"; // Importing react from React Library.
 import axios from "axios"; // Importing axios from Axios library.
 import BootstrapTable from "react-bootstrap-table-next"; // Importing some css features from BootstrapTable.
+import paginationFactory from "react-bootstrap-table2-paginator"; // Paginator is helping us to split the tickets display in the same page.
 import "./App.css";
 
 // App function. Basically, we are get
@@ -19,14 +20,57 @@ function App() {
       text: "Subject",
     },
     {
+      dataField: "description",
+      text: "Description",
+    },
+    {
+      dataField: "tags",
+      text: "Tags",
+    },
+    {
       dataField: "status",
       text: "Status",
     },
-    {
-      dataField: "priority",
-      text: "Priority",
-    },
   ];
+
+  // Header added in page. Added some, CSS for better visual.
+  const CaptionElement = () => (
+    <h1
+      style={{
+        borderRadius: "0.20em",
+        textAlign: "center",
+        color: "#FFFFFF",
+        border: "3px solid #DFFF00",
+        padding: "0.55em",
+        backgroundColor: "#04363d",
+        marginBottom: "1.5em",
+      }}
+    >
+      Zendesk Ticket Viewer
+    </h1>
+  );
+
+  // Adding navigation for the displaying different tickets. Each split will display 25 tickets.
+  const options = {
+    paginationSize: 25, // Size of pagination.
+    pageStartIndex: 0,
+    hideSizePerPage: true, // Hide the sizePerPage dropdown always.
+    hidePageListOnlyOnePage: true, // Hide the pagination list when only one page.
+    nextPageText: "Next",
+    prePageText: "Back",
+    showTotal: true,
+    disablePageTitle: true,
+    sizePerPageList: [
+      {
+        text: "25",
+        value: 25,
+      },
+      {
+        text: "50",
+        value: 50,
+      },
+    ],
+  };
 
   React.useEffect(() => {
     // It will update the GetFindTickets with our API. We will recieve the tickets from browser.
@@ -55,9 +99,15 @@ function App() {
   };
 
   return (
-    // Setting-up the table.
+    // Setting-up the table, header and pagination.
     <div className="App">
-      <BootstrapTable keyField="id" data={data} columns={columns} />
+      <BootstrapTable
+        keyField="id"
+        data={data}
+        columns={columns}
+        caption={<CaptionElement />}
+        pagination={paginationFactory(options)}
+      />
     </div>
   );
 }

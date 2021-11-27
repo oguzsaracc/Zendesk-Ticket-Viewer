@@ -24,7 +24,7 @@ Customer service project that allows the creation and management of support tick
    ## What are the features in this project?
       - It connected to the Zendesk API successfully.
       - All the tickets requested from the account and tickets are displayed in a list.
-      - Will be continued...
+      - Each list in the page will display 25 tickets.
       
       
         
