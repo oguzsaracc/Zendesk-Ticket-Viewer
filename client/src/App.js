@@ -4,9 +4,12 @@ import React from "react"; // Importing react from React library.
 import axios from "axios"; // Importing axios from Axios library.
 import { useEffect, useState } from "react";
 import "./App.css";
+// Start of Components.
 import NavBar from "./components/NavBar";
 import Header from "./components/Header";
 import CustomButton from "./components/CustomButton";
+import CustomTable from "./components/CustomTable";
+// End of Components.
 import BootstrapTable from "react-bootstrap-table-next"; // Importing some css features from BootstrapTable.
 import paginationFactory from "react-bootstrap-table2-paginator"; // Paginator is helping us to split the tickets display in the same page.
 
@@ -14,70 +17,24 @@ function App() {
   const [data, setData] = useState([]); // useState() is a Hook that allows to state variables in functional components.
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const customStyle = (cell, row, rowIndex, colIndex) => {
-    if (rowIndex % 2 === 0) {
-      return {
-        backgroundColor: "#899499",
-      };
-    }
-    return {
-      backgroundColor: "#E5E4E2",
-    };
-  };
-
-  // So, in columns; we are choosing that what we are going to display to in our project. Note that, you could do various changes in this column.
-  const columns = [
-    {
-      dataField: "id",
-      text: "Ticket ID",
-      style: (cell, row, rowIndex, colIndex) =>
-        customStyle(cell, row, rowIndex, colIndex),
-    },
-    {
-      dataField: "subject",
-      text: "Subject",
-      style: (cell, row, rowIndex, colIndex) =>
-        customStyle(cell, row, rowIndex, colIndex),
-    },
-    {
-      dataField: "created_at",
-      text: "Created At",
-      style: (cell, row, rowIndex, colIndex) =>
-        customStyle(cell, row, rowIndex, colIndex),
-    },
-    {
-      dataField: "status",
-      text: "Status",
-      style: (cell, row, rowIndex, colIndex) =>
-        customStyle(cell, row, rowIndex, colIndex),
-    },
-  ];
-
-  const expandRow = {
-    renderer: (row) => (
-      <div>
-        <p>Ticket Details</p>
-        <p>{row.description}</p>
-      </div>
-    ),
-  };
-
   useEffect(() => {
     // It will update the GetFindTickets with our API. We will recieve the tickets from browser.
-    const code = new URLSearchParams(window.location.search).get("code");
+    const code = new URLSearchParams(window.location.search).get("code"); // The search property contains the query string portion of the current url.
 
     if (code) {
-      setLoggedIn(true);
-      GetFindTickets(code);
+      setLoggedIn(true); // We will login if succeed.
+      GetFindTickets(code); // And find the tickets from the URL.
     }
   }, []);
 
+  //
   const GetFindTickets = (code) => {
     // In here, async function is used to for checking that we are not breaking the execution.
     const findTickets = async () => {
       try {
         const resp = await axios.get("/api/" + code); // Before a function makes the function it will wait for axios.get("/api") and gets the data.
         if (resp.data) {
+          // If we can get the data, we will set it.
           setData(resp.data);
         } else {
           setData([]);
@@ -93,20 +50,43 @@ function App() {
     findTickets();
   };
 
+  <CustomTable />; // CustomTable Component. Designed table with added CSS.
+
+  // expandRow one of the feature that asked. Basically, it is allows us to display individual ticket information by clicking any ticket.
+  // Once the user clicked again, it will closed it itself. (Dropdown style)
+  const expandRow = {
+    renderer: (row) => (
+      <div>
+        <h4>
+          <b>Ticket Details</b>
+        </h4>
+        <p>{row.description}</p>
+      </div>
+    ),
+  };
+
+  // Options for the design process of pagination. Some texture adding.
+  const options = {
+    firstPageText: "First",
+    prePageText: "Back",
+    nextPageText: "Next",
+    lastPageText: "Last",
+  };
+
   return (
-    // Setting-up the table, header and pagination.
+    // Setting-up the table, header and pagination. For Sign-in page, there are button and image.
     <div className="App text-center container-fluid">
       {!loggedIn ? (
         <>
           <img
             alt="Zendesk"
-            className="mb-4"
+            className="mb-4 mt-5"
             src="https://d1eipm3vz40hy0.cloudfront.net/images/social/twitter-zendesk.jpg"
-            width="150"
+            width="230"
           ></img>
-          <h1 className="h3 mb-3 font-weight-normal">Sign in with Zendesk</h1>
+          <h1 className="h2 mb-3 font-weight-normal">Sign in with Zendesk</h1>
           <CustomButton
-            variant="primary"
+            variant="success"
             size="lg"
             href="https://zccoguzsarac.zendesk.com/oauth/authorizations/new?response_type=code&redirect_uri=http://localhost:3000/&client_id=ticketviewer&scope=tickets:read"
             label="Sign In"
@@ -121,9 +101,9 @@ function App() {
               keyField="id"
               data={data}
               caption={<Header label="Zendesk Ticket Viewer" />}
-              columns={columns}
-              pagination={paginationFactory()}
-              bordered={false}
+              columns={CustomTable}
+              pagination={paginationFactory(options)}
+              bordered={true}
               expandRow={expandRow}
             />
           </div>

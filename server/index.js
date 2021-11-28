@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3001; // Port 3000 was used by client. So, for 
 // Express in this case for the create a simple web server for us runs on port 3001. (server)
 const app = express();
 
-// OAuth2 grant information defining.
+// OAuth2 grant information defining. The Informations for OAuth we generated in; Zendesk Admin System > Apps and Integration > API > OAuth.
 const ZENDESK_URL = "https://zccoguzsarac.zendesk.com";
 const CLIENT_ID = "ticketviewer";
 const CLIENT_SECRET =
@@ -27,7 +27,7 @@ app.get("/api/:code", async (req, res) => {
     scope: SCOPE,
   };
 
-  // Getting access token from zendesk
+  // Getting access token from th Zendesk
   const findAccesToken = await axios.post(
     `${ZENDESK_URL}/oauth/tokens`,
     grant_info
