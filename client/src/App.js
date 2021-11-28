@@ -1,87 +1,82 @@
 // import: import statement is used to import binding that are exported by another module.
 // BootstrapTable: is a CSS Framework.
-import React from "react"; // Importing react from React Library.
+import React from "react"; // Importing react from React library.
 import axios from "axios"; // Importing axios from Axios library.
+import { useEffect, useState } from "react";
+import "./App.css";
+import NavBar from "./components/NavBar";
+import Header from "./components/Header";
+import CustomButton from "./components/CustomButton";
 import BootstrapTable from "react-bootstrap-table-next"; // Importing some css features from BootstrapTable.
 import paginationFactory from "react-bootstrap-table2-paginator"; // Paginator is helping us to split the tickets display in the same page.
-import "./App.css";
 
-// App function. Basically, we are get
 function App() {
-  const [data, setData] = React.useState([]); // useState() is a Hook that allows to state variables in functional components.
+  const [data, setData] = useState([]); // useState() is a Hook that allows to state variables in functional components.
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const customStyle = (cell, row, rowIndex, colIndex) => {
+    if (rowIndex % 2 === 0) {
+      return {
+        backgroundColor: "#899499",
+      };
+    }
+    return {
+      backgroundColor: "#E5E4E2",
+    };
+  };
+
   // So, in columns; we are choosing that what we are going to display to in our project. Note that, you could do various changes in this column.
   const columns = [
     {
       dataField: "id",
       text: "Ticket ID",
+      style: (cell, row, rowIndex, colIndex) =>
+        customStyle(cell, row, rowIndex, colIndex),
     },
     {
       dataField: "subject",
       text: "Subject",
+      style: (cell, row, rowIndex, colIndex) =>
+        customStyle(cell, row, rowIndex, colIndex),
     },
     {
-      dataField: "description",
-      text: "Description",
-    },
-    {
-      dataField: "tags",
-      text: "Tags",
+      dataField: "created_at",
+      text: "Created At",
+      style: (cell, row, rowIndex, colIndex) =>
+        customStyle(cell, row, rowIndex, colIndex),
     },
     {
       dataField: "status",
       text: "Status",
+      style: (cell, row, rowIndex, colIndex) =>
+        customStyle(cell, row, rowIndex, colIndex),
     },
   ];
 
-  // Header added in page. Added some, CSS for better visual.
-  const CaptionElement = () => (
-    <h1
-      style={{
-        borderRadius: "0.20em",
-        textAlign: "center",
-        color: "#FFFFFF",
-        border: "3px solid #DFFF00",
-        padding: "0.55em",
-        backgroundColor: "#04363d",
-        marginBottom: "1.5em",
-      }}
-    >
-      Zendesk Ticket Viewer
-    </h1>
-  );
-
-  // Adding navigation for the displaying different tickets. Each split will display 25 tickets.
-  const options = {
-    paginationSize: 25, // Size of pagination.
-    pageStartIndex: 0,
-    hideSizePerPage: true, // Hide the sizePerPage dropdown always.
-    hidePageListOnlyOnePage: true, // Hide the pagination list when only one page.
-    nextPageText: "Next",
-    prePageText: "Back",
-    showTotal: true,
-    disablePageTitle: true,
-    sizePerPageList: [
-      {
-        text: "25",
-        value: 25,
-      },
-      {
-        text: "50",
-        value: 50,
-      },
-    ],
+  const expandRow = {
+    renderer: (row) => (
+      <div>
+        <p>Ticket Details</p>
+        <p>{row.description}</p>
+      </div>
+    ),
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     // It will update the GetFindTickets with our API. We will recieve the tickets from browser.
-    GetFindTickets();
+    const code = new URLSearchParams(window.location.search).get("code");
+
+    if (code) {
+      setLoggedIn(true);
+      GetFindTickets(code);
+    }
   }, []);
 
-  const GetFindTickets = () => {
+  const GetFindTickets = (code) => {
     // In here, async function is used to for checking that we are not breaking the execution.
     const findTickets = async () => {
       try {
-        const resp = await axios.get("/api"); // Before a function makes the function it will wait for axios.get("/api") and gets the data.
+        const resp = await axios.get("/api/" + code); // Before a function makes the function it will wait for axios.get("/api") and gets the data.
         if (resp.data) {
           setData(resp.data);
         } else {
@@ -100,14 +95,40 @@ function App() {
 
   return (
     // Setting-up the table, header and pagination.
-    <div className="App">
-      <BootstrapTable
-        keyField="id"
-        data={data}
-        columns={columns}
-        caption={<CaptionElement />}
-        pagination={paginationFactory(options)}
-      />
+    <div className="App text-center container-fluid">
+      {!loggedIn ? (
+        <>
+          <img
+            alt="Zendesk"
+            className="mb-4"
+            src="https://d1eipm3vz40hy0.cloudfront.net/images/social/twitter-zendesk.jpg"
+            width="150"
+          ></img>
+          <h1 className="h3 mb-3 font-weight-normal">Sign in with Zendesk</h1>
+          <CustomButton
+            variant="primary"
+            size="lg"
+            href="https://zccoguzsarac.zendesk.com/oauth/authorizations/new?response_type=code&redirect_uri=http://localhost:3000/&client_id=ticketviewer&scope=tickets:read"
+            label="Sign In"
+          ></CustomButton>
+        </>
+      ) : (
+        <>
+          <NavBar />
+          <div className="container">
+            <BootstrapTable
+              bootstrap4
+              keyField="id"
+              data={data}
+              caption={<Header label="Zendesk Ticket Viewer" />}
+              columns={columns}
+              pagination={paginationFactory()}
+              bordered={false}
+              expandRow={expandRow}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
