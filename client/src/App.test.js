@@ -1,15 +1,11 @@
-import React from 'react';
-import App from './App';
-import {} from '@testing-library/react';
-import {} from '@testing-library/jest-dom';
-import {} from 'react-dom/test-utils';
+import React from "react";
+import App from "./App";
+import { render } from "@testing-library/react";
+import "@testing-library/jest-dom/extend-expect";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("headerTest renders with correct text", () => {
+  const { getByTestId } = render(<App />);
+  const headerTest = getByTestId("headerTest");
+
+  expect(headerTest.textContent).toBe("Welcome! Sign in with Zendesk");
 });
-
-
-
-

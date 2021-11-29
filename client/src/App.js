@@ -50,8 +50,6 @@ function App() {
     findTickets();
   };
 
-  <CustomTable />; // CustomTable Component. Designed table with added CSS.
-
   // expandRow one of the feature that asked. Basically, it is allows us to display individual ticket information by clicking any ticket.
   // Once the user clicked again, it will closed it itself. (Dropdown style)
   const expandRow = {
@@ -84,12 +82,14 @@ function App() {
             src="https://d1eipm3vz40hy0.cloudfront.net/images/social/twitter-zendesk.jpg"
             width="230"
           ></img>
-          <h1 className="h2 mb-3 font-weight-normal">Sign in with Zendesk</h1>
+          <h1 data-testid="headerTest" className="h2 mb-3 font-weight-normal">
+            Welcome! Sign in with Zendesk
+          </h1>
           <CustomButton
             variant="success"
             size="lg"
             href="https://zccoguzsarac.zendesk.com/oauth/authorizations/new?response_type=code&redirect_uri=http://localhost:3000/&client_id=ticketviewer&scope=tickets:read"
-            label="Sign In"
+            label="Sign in"
           ></CustomButton>
         </>
       ) : (
