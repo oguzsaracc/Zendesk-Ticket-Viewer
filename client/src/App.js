@@ -85,6 +85,9 @@ function App() {
           <h1 data-testid="headerTest" className="h2 mb-3 font-weight-normal">
             Welcome! Sign in with Zendesk
           </h1>
+          <p data-testid="guideLabelTest">
+            - Please press the button below for sign in -
+          </p>
           <CustomButton
             variant="success"
             size="lg"

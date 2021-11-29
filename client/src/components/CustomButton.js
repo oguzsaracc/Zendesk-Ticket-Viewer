@@ -6,7 +6,13 @@ const CustomButton = (props) => {
   const { variant, size, href, label } = props;
 
   return (
-    <Button variant={variant} className="btn" size={size} href={href}>
+    <Button
+      variant={variant}
+      className="btn"
+      data-testid="buttonTest"
+      size={size}
+      href={href}
+    >
       {label}
     </Button>
   );

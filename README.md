@@ -9,6 +9,7 @@ Customer service project that allows the creation and management of support tick
       - Each list in the page will display number of ticket that you choose.
       - By clicking the ticket that you select you could see individual information. Once you click again on same ticket it will hide the information.
       - OAuth2 protocol implemented in this project for security.
+      - The code is tested with react-test-library.
 
 ## Installation and Usage:
 

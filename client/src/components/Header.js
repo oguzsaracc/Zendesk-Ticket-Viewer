@@ -5,6 +5,7 @@ const Header = (props) => {
   const { label } = props;
   return (
     <h3
+      role="header"
       style={{
         textAlign: "center",
         color: "#04363D",
